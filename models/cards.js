@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
+      order: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
       content: {
         allowNull: false,
         type: DataTypes.STRING,
