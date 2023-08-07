@@ -31,7 +31,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 // 회원가입 끝
-
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
