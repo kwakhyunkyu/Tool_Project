@@ -2,6 +2,7 @@ const express = require('express');
 const { Users } = require('../models');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+require('dotenv').config();
 // 라우팅 작업하세요!
 
 router.post('/login', async (req, res) => {
@@ -10,6 +11,7 @@ router.post('/login', async (req, res) => {
   try {
     // 유저 찾기
     const user = await Users.findOne({ where: { email } });
+
     if (!user) {
       //유저가 없다면 에러반환
       res.status(401).json({ message: '해당하는 사용자가 존재하지 않습니다.' });
@@ -19,7 +21,7 @@ router.post('/login', async (req, res) => {
       res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
       return;
     }
-
+    console.log('process.env.SECRET_KEY = ', process.env.SECRET_KEY);
     // JWT 발급
     const token = jwt.sign(
       {
