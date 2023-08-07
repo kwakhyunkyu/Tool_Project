@@ -1,0 +1,21 @@
+
+
+# User모델 생성
+npx sequelize model:generate --name Users --attributes userId:integer,email:string,name:string,password:string
+
+# Board모델 생성
+npx sequelize model:generate --name Boards --attributes boardId:integer,color:enum,name:string
+
+# User-board모델 생성
+npx sequelize model:generate --name UserBoards --attributes userBoardId:integer,isAdmin:boolean
+
+# Column모델 생성
+npx sequelize model:generate --name Columns --attributes columnId:integer,boardId:integer,name:string,order:integer
+
+# Card모델 생성
+npx sequelize model:generate --name Cards --attributes cardId:integer,columnId:integer,userId:integer,name:string,content:string,color:enum,endDate:Date
+
+# Comment모델 생성
+npx sequelize model:generate --name Comments --attributes userId:integer,cardId:integer,userId:integer,comment:string
+
+

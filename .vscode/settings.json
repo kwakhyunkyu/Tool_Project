@@ -1,0 +1,5 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "html-to-css-autocompletion.autocompletionFilesScope": "linked-files"
+}
