@@ -27,21 +27,22 @@ router.post('/:board_id/column', authMiddleware, async (req, res) => {
   const { name, order } = req.body;
 
   try {
+    console.log('name, order = ', user.userId, name, order);
     // 유저보드에 있는 유저의 정보를 가져오기 (보드테이블이 없으므로 주석)
-    // const userBoard = await UserBoards.findOne({
-    //   where: { userId: user.userId, boardId: columnInfo.boardId },
-    // });
-    // if (!userBoard) return res.status(401).json({ message: '해당 보드를 찾지 못했습니다.' });
+    const userBoard = await UserBoards.findOne({
+      where: { userId: user.userId, boardId: board_id },
+    });
+    if (!userBoard) return res.status(401).json({ message: '해당 보드를 찾지 못했습니다.' });
     // 순사가 겹치는지 확인
     const dupOrder = await Columns.findOne({ where: { order: order, boardId: board_id } });
     if (dupOrder) return res.status(401).json({ message: '순서가 겹치는 컬럼이 있습니다.' });
 
     // 관리자인지 확인 (보드테이블이 없으므로 주석)
-    // if (userBoard.isAdmin === false)
-    //   return res.status(400).json({ message: '컬럼생성은 관리자만 가능합니다.' });
+    if (userBoard.isAdmin === false)
+      return res.status(400).json({ message: '컬럼생성은 관리자만 가능합니다.' });
 
     const column = await Columns.create({
-      boardId,
+      boardId: board_id,
       name,
       order,
     });
@@ -58,24 +59,19 @@ router.put('/:board_id/column/:column_id', authMiddleware, async (req, res) => {
   const { board_id, column_id } = req.params;
   try {
     // 유저보드에 있는 유저의 정보를 가져오기 (보드테이블이 없으므로 주석)
-    // const userBoard = await UserBoards.findOne({
-    //   where: { userId: user.userId, boardId: board_id },
-    // });
+    const userBoard = await UserBoards.findOne({
+      where: { userId: user.userId, boardId: board_id },
+    });
 
     // 가져온 유저가 관리자인지 확인한다. (보드테이블이 없으므로 주석)
-    // if (userBoard.isAdmin === false)
-    //   return res.status(403).json({ message: '수정권한이 없습니다.' });
-
-    const dummyBoardId = 1;
+    if (userBoard.isAdmin === false)
+      return res.status(403).json({ message: '수정권한이 없습니다.' });
 
     // 컬럼의 이름을 수정한다.
     await Columns.update(
       { name: name },
-      // {
-      //   where: { columnId: column_id, boardId: columnInfo.boardId },
-      // },
       {
-        where: { columnId: column_id, boardId: dummyBoardId },
+        where: { columnId: column_id, boardId: board_id },
       },
     );
 
@@ -98,7 +94,6 @@ router.put('/:board_id/column_order/:column_id', authMiddleware, async (req, res
     // 컬럼의 모든 정보를 가져오기
     const columns = await Columns.findAll({ where: { boardId: board_id } });
     for (let idx = 0; idx < columns.length; idx++) {
-      // console.log('???');
       console.log('column = ', columns[idx].order);
     }
     // 순번을 바꾸는데
@@ -116,14 +111,13 @@ router.delete('/:board_id/column/:column_id', authMiddleware, async (req, res) =
     // 컬럼의 정보를 가져오기
     const columnInfo = await Columns.findOne({ where: { columnId: column_id } });
     if (!columnInfo) return res.status(412).json({ message: '해당 컬럼을 찾지 못했습니다.' });
-    console.log('columnInfo = ', columnInfo);
     // 유저보드에 있는 유저의 정보를 가져오기 (보드유저테이블이 없으므로 주석)
-    // const userBoard = await UserBoards.findOne({
-    //   where: { userId: user.userId, boardId: board_id },
-    // });
+    const userBoard = await UserBoards.findOne({
+      where: { userId: user.userId, boardId: board_id },
+    });
     // 가져온 유저가 관리자인지 확인한다. (보드유저테이블이 없으므로 주석)
-    // if (userBoard.isAdmin === false)
-    //   return res.status(403).json({ message: '삭제권한이 없습니다.' });
+    if (userBoard.isAdmin === false)
+      return res.status(403).json({ message: '삭제권한이 없습니다.' });
 
     await Columns.destroy({
       // where: { columnId: column_id, boardId: board_id }, (보드유저테이블이 없으므로 주석)
