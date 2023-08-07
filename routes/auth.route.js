@@ -2,6 +2,7 @@ const express = require('express');
 const { Users } = require('../models');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+require('dotenv').config();
 // 라우팅 작업하세요!
 
 router.post('/login', async (req, res) => {
