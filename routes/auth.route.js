@@ -5,6 +5,44 @@ const router = express.Router();
 require('dotenv').config();
 // 라우팅 작업하세요!
 
+// 회원가입 API
+router.post('/users', async (req, res) => {
+  const { email, password, confirmPassword, name } = req.body;
+  const isExistUser = await Users.findOne({
+    where: {
+      email: email,
+    },
+  });
+
+  if (!email || !password || !confirmPassword) {
+    res.status(400).json({
+      errorMessage: '공백이 없도록 입력하세요.',
+    });
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    res.status(400).json({
+      errorMessage: '패스워드가 패스워드 확인란과 다릅니다.',
+    });
+    return;
+  }
+
+  // email 동일한 유저가 실제로 존재할 때, 에러발생
+  if (isExistUser) {
+    res.status(409).json({
+      message: '중복된 닉네임입니다.',
+    });
+    return;
+  }
+
+  await Users.create({ email, password, name });
+
+  return res.status(201).json({
+    message: '회원가입이 완료되었습니다.',
+  });
+});
+
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
