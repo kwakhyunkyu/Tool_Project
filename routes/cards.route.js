@@ -67,18 +67,25 @@ router.put('/card/move/:cardId', authMiddleware, async (req, res) => {
 
     if (card.columnId !== columnId) {
       // 다른 칼럼으로 이동할 경우
+
+      // 이동하기 전 카드가 있던 칼럼에서는 이동할 카드의 order 값보다 큰 order 값을 가진 카드들의 order 값을 1씩 감소시킵니다.
       await Cards.update(
         { order: sequelize.literal(`\`order\` - 1`) },
         { where: { columnId: card.columnId, order: { [Op.gt]: card.order } } },
       );
 
+      // 이동하려는 칼럼에서는 이동할 카드의 newOrder 값보다 같거나 큰 order 값을 가진 카드들의 order 값을 1씩 증가시킵니다.
       await Cards.update(
         { order: sequelize.literal(`\`order\` + 1`) },
         { where: { columnId, order: { [Op.gte]: newOrder } } },
       );
     } else {
+      // 같은 칼럼 내에서의 이동
+
       if (newOrder < card.order) {
         // 같은 칼럼 내에서 낮은 order에서 높은 order로 변경될 때
+
+        // 기존에 낮은 order 값 이상이면서 높은 order 미만의 order 값을 가진 카드들의 order 값을 1씩 감소시킵니다.
         await Cards.update(
           { order: sequelize.literal(`\`order\` - 1`) },
           {
@@ -90,6 +97,8 @@ router.put('/card/move/:cardId', authMiddleware, async (req, res) => {
         );
       } else if (newOrder > card.order) {
         // 같은 칼럼 내에서 높은 order에서 낮은 order로 변경될 때
+
+        // 기존에 낮은 order 값 이상이면서 높은 order 미만의 order 값을 가진 카드들의 order 값을 1씩 증가시킵니다.
         await Cards.update(
           { order: sequelize.literal(`\`order\` + 1`) },
           {
@@ -102,6 +111,7 @@ router.put('/card/move/:cardId', authMiddleware, async (req, res) => {
       }
     }
 
+    // 카드의 order 값을 이동하려는 newOrder 값으로 업데이트합니다.
     await Cards.update({ order: newOrder }, { where: { cardId, columnId } });
 
     res.status(200).json({ message: '카드가 이동되었습니다.' });
