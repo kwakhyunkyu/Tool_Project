@@ -5,11 +5,11 @@ router.get('/', (req, res) => {
   return res.render('index');
 });
 router.get('/login', (req, res) => {
-  return res.render('auth');
+  return res.render('login');
 });
 
 router.get('/signup', (req, res) => {
-  return res.render('signup');
+  return res.render('auth');
 });
 
 router.get('/boards/:boardId', (req, res) => {
@@ -20,4 +20,11 @@ router.get('/cards/:cardId', (req, res) => {
   return res.render('card');
 });
 
+router.get('/boards-admin', (req, res) => {
+  return res.render('board-admin');
+});
+
+router.get('/boards-edit/:boardId', (req, res) => {
+  return res.render('board-edit');
+});
 module.exports = router;

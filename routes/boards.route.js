@@ -32,9 +32,11 @@ router.get('/boards', authMiddleware, async (req, res) => {
   try {
     const boards = await UserBoards.findAll({
       where: { userId },
-      includes: [{ model: Boards }],
+      include: [{ model: Boards }],
     });
-    res.status(200).json({ data: boards });
+    // console.log(boards[0].dataValues.Board.dataValues);
+    const data = boards.map((board) => board.dataValues.Board.dataValues);
+    res.status(200).json({ data });
   } catch (error) {
     res.status(error.status || 500).json({ message: error.message });
   }
@@ -50,6 +52,23 @@ router.get('/boards/:boardId', async (req, res) => {
     return res.status(200).json({ data: board });
   } catch (error) {
     return res.status(500).json({ message: error.message });
+  }
+});
+
+// 보드 관리
+router.get('/boards-admin', authMiddleware, async (req, res) => {
+  const { userId } = res.locals.user;
+
+  try {
+    const boards = await UserBoards.findAll({
+      where: { [Op.and]: [{ userId }, { isAdmin: true }] },
+      include: [{ model: Boards }],
+    });
+    // console.log(boards[0].dataValues.Board.dataValues);
+    const data = boards.map((board) => board.dataValues.Board.dataValues);
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
   }
 });
 
