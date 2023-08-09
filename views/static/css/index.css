@@ -1,3 +1,13 @@
+.board-from {
+  margin: 30px auto;
+  width: 500px;
+  padding: 40px;
+  border: 1px solid #3d3d3d;
+}
+.form-title {
+  margin-bottom: 20px;
+}
+
 .board {
   display: flex;
   flex-wrap: wrap;
@@ -6,6 +16,10 @@
 }
 
 .board li {
+  padding: 20px;
   width: 500px;
   border: 1px solid #3d3d3d;
+}
+.board li .board-title {
+  margin-bottom: 20px;
 }

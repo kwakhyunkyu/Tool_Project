@@ -35,4 +35,7 @@ editBtnEl.addEventListener('click', async () => {
   });
   const data = await response.json();
   console.log(data);
+  if (data.message === '수정이 완료되었습니다.') {
+    window.location.href = '/boards-admin';
+  }
 });
