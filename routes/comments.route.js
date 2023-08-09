@@ -4,78 +4,67 @@ const router = express.Router();
 const auth = require('../middlewares/auth-middleware');
 
 // 댓글 작성
-router.post('/', auth, (req, res) => {
+router.post('/comments/:cardId', auth, (req, res) => {
   const { cardId } = req.params;
   const { comment } = req.body;
   const userId = res.locals.user.userId;
   if (!comment) return res.status(400).json({ message: '댓글 내용을 입력해주세요.' });
 
-  Comments.create({ cardId: cardId, userId: userId, comment: comment });
+  Comments.create({ cardId, userId, comment });
   res.status(200).json({ message: '댓글이 작성되었습니다.' });
 });
 
 // 댓글 수정
-router.put('/:commentId', auth, async (req, res) => {
+router.put('/comments/:commentId', auth, async (req, res) => {
   const commentId = req.params.commentId;
   const comment = req.body.comment;
   const { userId } = res.locals.user;
   const comments = await Comments.findOne({ where: { commentId } });
 
-  if (!comments) return res.status(400).json({ message: '댓글 내용을 입력해 주세요.' });
+  if (!comments) return res.status(404).json({ message: '해당 댓글이 없습니다.' });
   if (comments) {
-    if (userId !== comments.UserId) {
-      return res.status(400).json({ message: '댓글 작성자가 아닙니다.' });
+    if (userId !== comments.userId) {
+      return res.status(401).json({ message: '댓글 작성자가 아닙니다.' });
     } else {
-      await Comments.update(
-        { comment: comment },
-        {
-          where: {
-            commentId: commentId,
-          },
-        },
-      );
+      await Comments.update({ comment }, { where: { commentId } });
       res.status(200).json({ message: '수정이 정상적으로 완료되었습니다.' });
     }
   }
 });
 
 // 댓글 삭제
-router.delete('/:commentId', auth, async (req, res) => {
+router.delete('/comments/:commentId', auth, async (req, res) => {
   const commentId = req.params.commentId;
   const { userId } = res.locals.user;
   const comments = await Comments.findOne({ where: { commentId } });
 
   if (!comments)
-    return res.status(400).json({ message: '존재하지 않는 댓글은 삭제할 수 없습니다.' });
+    return res.status(404).json({ message: '존재하지 않는 댓글은 삭제할 수 없습니다.' });
   if (comments) {
-    if (userId !== comments.UserId) {
-      return res.status(400).json({ message: '댓글 작성자가 아닙니다.' });
+    if (userId !== comments.userId) {
+      return res.status(401).json({ message: '댓글 작성자가 아닙니다.' });
     } else {
-      await Comments.destroy({
-        where: {
-          commentId: commentId,
-        },
-      });
+      await Comments.destroy({ where: { commentId } });
       res.status(200).json({ message: '댓글이 정상적으로 삭제되었습니다.' });
     }
   }
 });
 
 // 댓글 조회
-router.get('/comment/:card_id', async (req, res) => {
+router.get('/comments/:card_id', async (req, res) => {
   const cardId = req.params.card_id;
 
   try {
-    const comments = await Comments.findAll({ where: { CardId: cardId } });
+    const comments = await Comments.findAll({ where: { cardId } });
 
     if (comments.length === 0) {
       return res.status(404).json({ message: '해당 카드에 댓글이 없습니다.' });
     }
 
     const commentList = comments.map((comment) => ({
-      commentId: comment.id,
+      commentId: comment.commentId,
       comment: comment.comment,
-      userId: comment.UserId,
+      userId: comment.userId,
     }));
 
     res.status(200).json({ comments: commentList });
