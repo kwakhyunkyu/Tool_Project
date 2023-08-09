@@ -27,4 +27,8 @@ router.get('/boards-admin', (req, res) => {
 router.get('/boards-edit/:boardId', (req, res) => {
   return res.render('board-edit');
 });
+
+router.get('/user', (req, res) => {
+  return res.render('user');
+});
 module.exports = router;
