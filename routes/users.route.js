@@ -13,7 +13,7 @@ router.post('/signup', async (req, res) => {
     const isExitstUser = await Users.findOne({ where: { email } });
     //이미 db에 이메일이 있다면
     if (isExitstUser) {
-      res.status(409).json({ message: '이미 존제하는 이메일입니다.' });
+      res.status(409).json({ message: '이미 존재하는 이메일입니다.' });
       return;
     }
   } catch (error) {
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
     }
     const token = await jwt.sign({ userId: user.userId }, process.env.SECRET_KEY);
     res.cookie('authorization', `Bearer ${token}`);
-    return res.status(200).json({ token });
+    return res.status(200).json({ message: `로그인 성공 ${user.name}님 환영합니다.` });
   } catch {
     res.status(500).json({ message: 'login server error.' });
   }
@@ -72,23 +72,26 @@ router.delete('/userInfo', middleware, async (req, res) => {
         [Op.and]: [{ userId: userId }],
       },
     });
-    res.status(200).json({ message: '삭제가 완료되었습니다.' });
-  } catch (e) {
-    console.log(e);
+    res.status(200).json({ message: `${userFind.name}님 삭제가 완료되었습니다.` });
+  } catch {
     res.status(500).json({ message: 'server error.' });
   }
 });
 //수정
-router.put('/signup_update', middleware, async (req, res) => {
+router.put('/userInfo_update', middleware, async (req, res) => {
   const { userId } = res.locals.user;
   try {
     const { email, password, name } = req.body;
 
     const userUpdateFind = await Users.findOne({ where: { userId } });
+    const userEmailCheck = await Users.findOne({ where: { email } });
     if (!userUpdateFind) {
       return res.status(404).json({ message: '유저가 존재하지 않습니다.' });
     } else if (userUpdateFind.userId !== userId) {
       return res.status(401).json({ message: '권한이 없습니다.' });
+    }
+    if (userEmailCheck) {
+      return res.status(404).json({ message: '해당 이메일은 중복입니다.' });
     }
 
     await Users.update(
@@ -100,8 +103,7 @@ router.put('/signup_update', middleware, async (req, res) => {
       },
     );
     res.status(200).json({ message: '유저 정보를 수정합니다.' });
-  } catch (e) {
-    console.log(e);
+  } catch {
     res.status(500).json({ message: 'server error.' });
   }
 });
