@@ -6,18 +6,17 @@ const boardsRouter = require('./routes/boards.route.js');
 const cardsRouter = require('./routes/cards.route.js');
 const columnsRouter = require('./routes/columns.route.js');
 const commentsRouter = require('./routes/comments.route.js');
+const viewRouter = require('./views/router/index.js');
 const app = express();
 
 const PORT = 3000;
 app.use(express.json());
 app.use(cookieParser());
 
-// app.set('view engine', 'ejs');
-// app.set('views', __dirname + '/views');
-// app.use(express.static(__dirname + '/views/static'));
-// app.use('/', viewRouter);
-
-// app.use('/api', router);
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.use(express.static(__dirname + '/views/static'));
+app.use('/', viewRouter);
 
 app.use('/api', [
   usersRouter,
