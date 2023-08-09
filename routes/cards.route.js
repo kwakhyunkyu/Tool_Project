@@ -25,6 +25,7 @@ router.post('/card', authMiddleware, async (req, res) => {
 
     res.status(201).json(newCard);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: '카드 생성 중 오류가 발생했습니다.' });
   }
 });
@@ -34,26 +35,23 @@ router.put('/card/:cardId', authMiddleware, async (req, res) => {
   try {
     const cardId = req.params.cardId;
     const { name, content, color } = req.body;
-    const userId = res.locals.user.userId; // 인증된 사용자 ID
+    const userId = res.locals.user.userId;
 
-    await Cards.update({ name, content, color, userId }, { where: { cardId } });
+    const [updatedRowCount] = await Cards.update(
+      { name, content, color, userId },
+      { where: { cardId } },
+    );
+
+    if (updatedRowCount === 0) {
+      return res.status(404).json({ error: '해당 카드를 찾을 수 없습니다.' });
+    }
 
     const updatedCard = await Cards.findByPk(cardId);
 
     res.status(200).json(updatedCard);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: '카드 수정 중 오류가 발생했습니다.' });
-  }
-});
-
-// 카드 삭제
-router.delete('/card/:cardId', authMiddleware, async (req, res) => {
-  try {
-    const cardId = req.params.cardId;
-    await Cards.destroy({ where: { cardId } });
-    res.status(204).json();
-  } catch (error) {
-    res.status(500).json({ error: '카드 삭제 중 오류가 발생했습니다.' });
   }
 });
 
