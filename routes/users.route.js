@@ -107,6 +107,26 @@ router.put('/userInfo_update', middleware, async (req, res) => {
     res.status(500).json({ message: 'server error.' });
   }
 });
+// 유저 조회
+router.post('/user_search', async (req, res) => {
+  const { email } = req.body;
+  try {
+    if (!email) {
+      return res.status(400).json({
+        message: 'email 입력을 다시 해주세요',
+      });
+    }
+    const user = await Users.findOne({ where: { email } });
+    if (!user) {
+      return res.status(400).json({
+        message: '해당 유저가 존재하지 않습니다.',
+      });
+    }
 
+    return res.status(200).json({ user });
+  } catch {
+    res.status(500).json({ message: 'server error.' });
+  }
+});
 // 회원가입 끝
 module.exports = router;
