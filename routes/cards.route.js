@@ -5,55 +5,28 @@ const { Op } = require('sequelize');
 const sequelize = require('sequelize');
 const router = express.Router();
 
-<<<<<<< HEAD
-// 카드 조회
-router.get('/:columnId/card', async (req, res) => {
-  try {
-    const columnId = req.params.columnId;
-=======
+
 // 칼럼 내 카드 조회
 router.get('/:columnId/card', async (req, res) => {
   try {
     const columnId = req.params.columnId;
-
     // order 값을 기준으로 오름차순
->>>>>>> f7f5f0ec53fd5946794131e25e325d815ce2b019
     const cards = await Cards.findAll({
       where: { columnId },
       order: [['order', 'ASC']],
     });
-<<<<<<< HEAD
     if (!cards.length) {
       return res.status(401).json({ message: '해당 칼럼에 카드가 없습니다.' });
     }
-    console.log('cards = ', cards);
+
 
     res.status(200).json({ datas: cards });
-=======
-
-    res.status(200).json(cards);
->>>>>>> f7f5f0ec53fd5946794131e25e325d815ce2b019
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: '카드 조회 중 오류가 발생했습니다.' });
   }
 });
 
-<<<<<<< HEAD
-// router.get('/:columnId/cards', async (req, res) => {
-//   // const { columnIds } = req.body;
-//   try {
-//     const { columnId } = req.params;
-//     const cards = await Cards.findAll({ where: { columnId: columnId } });
-//     if (cards.length === 0) return res.status(401).json({ message: '카드가 없습니다.ㅜ' });
-//     return res.status(200).json({ datas: cards });
-//   } catch (error) {
-//     res.status(500).json({ message: error });
-//   }
-// });
-
-=======
->>>>>>> f7f5f0ec53fd5946794131e25e325d815ce2b019
 // 카드 생성
 router.post('/card', authMiddleware, async (req, res) => {
   try {
