@@ -81,6 +81,23 @@ router.put('/card/:cardId', authMiddleware, async (req, res) => {
   }
 });
 
+// 카드 삭제
+router.delete('/card/:cardId', authMiddleware, async (req, res) => {
+  try {
+    const cardId = req.params.cardId;
+    const deletedRowCount = await Cards.destroy({ where: { cardId } });
+
+    if (deletedRowCount === 0) {
+      return res.status(404).json({ error: '해당 카드를 찾을 수 없습니다.' });
+    }
+
+    res.status(204).json();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: '카드 삭제 중 오류가 발생했습니다.' });
+  }
+});
+
 // 카드 위치 수정
 router.put('/card/move/:cardId', authMiddleware, async (req, res) => {
   try {
