@@ -8,6 +8,7 @@ require('dotenv').config();
 // 회원가입 API
 router.post('/users', async (req, res) => {
   const { email, password, confirmPassword, name } = req.body;
+  console.log(email);
   const isExistUser = await Users.findOne({
     where: {
       email: email,

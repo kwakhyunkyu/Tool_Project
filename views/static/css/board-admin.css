@@ -6,6 +6,9 @@
 }
 
 .board li {
+  padding: 20px;
   width: 500px;
-  border: 1px solid #3d3d3d;
+}
+.board li .board-desc {
+  margin: 20px 0;
 }
