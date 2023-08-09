@@ -9,12 +9,14 @@ const router = express.Router();
 router.get('/:board_id/column', async (req, res) => {
   try {
     const { board_id } = req.params;
+    console.log('board_id = ', board_id);
     // 순번이 빠른 순서대로 가져오기
     const columns = await Columns.findAll(
+      { where: { boardId: board_id } },
       { order: [['order', 'ASC']] }, // 얘가 맨 위에 와야 정렬이 제대로 된다.ㅡㅡ
       { attributus: ['columnId, boardId', 'name', 'order'] },
-      { where: { boardId: board_id } },
     );
+    console.log('columns = ', columns);
     return res.status(200).json({ datas: columns });
   } catch (error) {
     return res.status(400).json({ message: error });
@@ -26,7 +28,6 @@ router.post('/:board_id/column', authMiddleware, async (req, res) => {
   const user = res.locals.user;
   const { board_id } = req.params;
   const { name } = req.body;
-
   try {
     const maxOrder = await Columns.max('order', { where: { boardId: board_id } });
     // 유저보드에 있는 유저의 정보를 가져오기

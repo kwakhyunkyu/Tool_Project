@@ -1,20 +1,31 @@
 // path의 보드ID를 가져오기
 const boardId = window.location.pathname.split('/')[2];
-window.onload = function () {
-  console.log(boardId);
-  columnView();
+window.onload = async function () {
+  await columnView();
 };
 
-// 컬럼 추가하기 버튼
-const modalBtn = document.getElementById('modal-btn');
-const modalDoc = document.getElementsByClassName('modal');
-modalBtn.addEventListener('click', modal);
+// 새 컬럼추가 버튼
+const addBtn = document.getElementById('add-btn');
+// 새컬럼 추가
+const addColumn = async () => {
+  const columnName = document.getElementById('column-name').value;
 
-// 컬럼추가하기
-async function modal() {
-  console.log('모달창 열기');
-  modalDoc[0].style.display = 'block';
-}
+  await fetch(`/api/${boardId}/column`, {
+    method: 'POST',
+    body: JSON.stringify({
+      name: columnName,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      alert(result.message);
+    });
+};
+// 컬럼 추가하기 버튼
+addBtn.addEventListener('click', addColumn);
 
 // 컬럼데이터 가져오기
 const getColumns = async () => {
@@ -23,6 +34,7 @@ const getColumns = async () => {
       return res.json();
     })
     .then((data) => {
+      console.log(data.datas);
       return data.datas;
     })
     .catch((err) => {
@@ -42,7 +54,13 @@ const columnView = async () => {
   columns.forEach(async (el) => {
     const column = document.createElement('div');
     column.innerHTML = `<div id="${el.columnId}" class="column">
-                          <h2>${el.name}</h2>
+                          <div>
+                            <h2>${el.name}</h2>
+                            <input id="new-name" type="text">
+                            <button id="edit-name-btn" class="edit-name-btn">이름수정</button>
+                            <input id="new-order" type="text">
+                            <button id="edit-order-btn" class="add-btn">순서수정</button>
+                          </div>
                         </div>`;
     columnList.append(column);
   });
@@ -93,4 +111,10 @@ const cardView = async () => {
   });
 };
 
+// 컬럼 이름변경
+const editBtn = document.getElementsByClassName('edit-name-btn');
+editBtn.addEventListener('click', editName);
+const editName = async ($event) => {
+  console.log('왜 안됨?');
+};
 // 카드를 눌렀을 때 카드 상세페이지로 이동하기
