@@ -29,6 +29,21 @@ router.post('/card', authMiddleware, async (req, res) => {
     const { columnId, name, content, color, endDate } = req.body;
     const userId = res.locals.user.userId;
 
+    // 사용자가 입력한 endDate 값을 new Date()를 사용하여 JavaScript의 Date 객체로 변환, endDate를 입력하지 않으면 null
+    const parsedEndDate = endDate ? new Date(endDate) : null;
+    // 현재 날짜와 시간을 나타내는 Date 객체를 생성
+    const currentDate = new Date();
+    // parsedEndDate가 null이 아닌 경우, 즉 사용자가 마감일을 입력한 경우에만 아래 코드 블록을 실행
+    if (parsedEndDate) {
+      // parsedEndDate의 연도를 현재 연도로 설정
+      // ex) dateObj.setFullYear(2023, 7, 10)은 dateObj의 연도를 2023으로 설정하고, 월을 7로(8월) 설정하며, 일을 10으로 설정합니다.
+      parsedEndDate.setFullYear(currentDate.getFullYear());
+      // 만약 parsedEndDate가 현재 날짜보다 작은 경우 parsedEndDate의 연도를 현재 연도에 1을 더한 연도로 설정합니다.
+      if (parsedEndDate < currentDate) {
+        parsedEndDate.setFullYear(currentDate.getFullYear() + 1);
+      }
+    }
+
     const maxOrder = await Cards.max('order', { where: { columnId } });
 
     const newCard = await Cards.create({
@@ -37,7 +52,7 @@ router.post('/card', authMiddleware, async (req, res) => {
       name,
       content,
       color,
-      endDate,
+      endDate: parsedEndDate,
       order: maxOrder !== null ? maxOrder + 1 : 1,
     });
 
@@ -52,11 +67,22 @@ router.post('/card', authMiddleware, async (req, res) => {
 router.put('/card/:cardId', authMiddleware, async (req, res) => {
   try {
     const cardId = req.params.cardId;
-    const { name, content, color } = req.body;
+    const { name, content, color, endDate } = req.body;
     const userId = res.locals.user.userId;
 
+    const parsedEndDate = endDate ? new Date(endDate) : null;
+    const currentDate = new Date();
+
+    if (parsedEndDate) {
+      parsedEndDate.setFullYear(currentDate.getFullYear());
+
+      if (parsedEndDate < currentDate) {
+        parsedEndDate.setFullYear(currentDate.getFullYear() + 1);
+      }
+    }
+
     const [updatedRowCount] = await Cards.update(
-      { name, content, color, userId },
+      { name, content, color, userId, endDate: parsedEndDate },
       { where: { cardId } },
     );
 
@@ -70,6 +96,23 @@ router.put('/card/:cardId', authMiddleware, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: '카드 수정 중 오류가 발생했습니다.' });
+  }
+});
+
+// 카드 삭제
+router.delete('/card/:cardId', authMiddleware, async (req, res) => {
+  try {
+    const cardId = req.params.cardId;
+    const deletedRowCount = await Cards.destroy({ where: { cardId } });
+
+    if (deletedRowCount === 0) {
+      return res.status(404).json({ error: '해당 카드를 찾을 수 없습니다.' });
+    }
+
+    res.status(204).json();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: '카드 삭제 중 오류가 발생했습니다.' });
   }
 });
 
