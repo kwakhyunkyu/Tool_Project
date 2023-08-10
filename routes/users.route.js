@@ -32,33 +32,33 @@ router.post('/signup', async (req, res) => {
   }
 });
 // 로그인
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    if (!email || !password) {
-      res.status(400).json({
-        message: 'check email or password',
-      });
-    }
+// router.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     if (!email || !password) {
+//       res.status(400).json({
+//         message: 'check email or password',
+//       });
+//     }
 
-    const user = await Users.findOne({ where: { email } });
-    if (!user) {
-      return res.status(400).json({
-        message: 'check email or password',
-      });
-    }
-    if (user.password !== password) {
-      return res.status(400).json({
-        message: 'check email or password',
-      });
-    }
-    const token = await jwt.sign({ userId: user.userId }, process.env.SECRET_KEY);
-    res.cookie('authorization', `Bearer ${token}`);
-    return res.status(200).json({ message: `로그인 성공 ${user.name}님 환영합니다.` });
-  } catch {
-    res.status(500).json({ message: 'login server error.' });
-  }
-});
+//     const user = await Users.findOne({ where: { email } });
+//     if (!user) {
+//       return res.status(400).json({
+//         message: 'check email or password',
+//       });
+//     }
+//     if (user.password !== password) {
+//       return res.status(400).json({
+//         message: 'check email or password',
+//       });
+//     }
+//     const token = await jwt.sign({ userId: user.userId }, process.env.SECRET_KEY);
+//     res.cookie('authorization', `Bearer ${token}`);
+//     return res.status(200).json({ message: `로그인 성공 ${user.name}님 환영합니다.` });
+//   } catch {
+//     res.status(500).json({ message: 'login server error.' });
+//   }
+// });
 // 삭제
 router.delete('/userInfo', middleware, async (req, res) => {
   const { userId } = res.locals.user;
