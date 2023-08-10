@@ -2,30 +2,47 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  return res.render('index');
+  const { authorization } = req.cookies;
+  if (authorization) return res.render('index', { login: 1 });
+  return res.redirect('/login');
 });
 router.get('/login', (req, res) => {
   return res.render('login');
 });
 
 router.get('/signup', (req, res) => {
-  return res.render('auth');
+  const { authorization } = req.cookies;
+  if (authorization)  return res.render('auth', { login: 1 });
+  return res.redirect('/login');
+ 
 });
 
 router.get('/boards/:boardId', (req, res) => {
-  return res.render('board');
+  const { authorization } = req.cookies;
+  if (authorization)   return res.render('board',{ login: 1 });
+  return res.redirect('/login');
+ 
 });
 
 router.get('/cards/:cardId', (req, res) => {
-  return res.render('card');
+  const { authorization } = req.cookies;
+  if (authorization)   return res.render('card',{ login: 1 });
+  return res.redirect('/login');
+ 
 });
 
 router.get('/boards-admin', (req, res) => {
-  return res.render('board-admin');
+  const { authorization } = req.cookies;
+  if (authorization)   return res.render('board-admin',{ login: 1 });
+  return res.redirect('/login');
+ 
 });
 
 router.get('/boards-edit/:boardId', (req, res) => {
-  return res.render('board-edit');
+  const { authorization } = req.cookies;
+  if (authorization)   return res.render('board-edit',{ login: 1 });
+  return res.redirect('/login');
+ 
 });
 
 router.get('/user', (req, res) => {
