@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>보드 관리 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/board-admin.css" />
+    <script src="/js/board-admin.js" defer></script>
+  </head>
+  <body>
+    <%- include('includes/header') %>
+    <section>
+      <h2>보드 관리</h2>
+      <ul class="board">
+        <li>
+          <h3 class="board-title">보드 제목</h3>
+          <p class="board-desc">보드 설명</p>
+          <button class="board-edit-btn">수정하기</button>
+          <button class="board-delete-btn">삭제하기</button>
+        </li>
+      </ul>
+    </section>
+  </body>
+</html>

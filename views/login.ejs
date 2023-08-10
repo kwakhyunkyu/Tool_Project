@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>piggy-path - 로그인</title>
-    <%- include('includes/favicon') %>
+    <title>로그인</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
       rel="stylesheet"
@@ -15,28 +14,20 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <link rel="stylesheet" href="/css/signin.css" />
+
     <script src="/js/login.js" defer></script>
   </head>
 
   <body>
-    <header>
-      <a href="/"><img src="/img/logo-auth.png" alt="" /></a>
-    </header>
-    <div class="login-form">
-      <h2>로그인</h2>
-      <div class="form-container">
-        <div class="input-wrapper">
-          <label><i class="fa fa-user" aria-hidden="true"></i></label>
-          <input type="email" id="userEmail" placeholder="이메일을 입력해주세요." />
-        </div>
-        <div class="input-wrapper">
-          <label><i class="fa fa-lock" aria-hidden="true"></i></label>
-          <input type="password" id="userPassword" placeholder="비밀번호를 입력해주세요." />
-        </div>
-        <button id="loginBtn">로그인</button>
+    <section>
+      <div>
+        <p>이메일</p>
+        <input class="login-email" placeholder="이메일을 입력해주세요." type="text" />
+        <p>패스워드</p>
+        <input class="login-password" placeholder="패스워드를 입력해주세요." type="password" />
+        <button class="login-btn">로그인하기</button>
       </div>
-    </div>
-    <a class="sign-up" href="/sign-up">회원가입하기</a>
+      <a href="/auth">회원가입하기</a>
+    </section>
   </body>
 </html>

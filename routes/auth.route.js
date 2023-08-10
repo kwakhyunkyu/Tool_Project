@@ -8,6 +8,7 @@ require('dotenv').config();
 // 회원가입 API
 router.post('/users', async (req, res) => {
   const { email, password, confirmPassword, name } = req.body;
+  console.log(email);
   const isExistUser = await Users.findOne({
     where: {
       email: email,
@@ -78,4 +79,10 @@ router.post('/login', async (req, res) => {
   }
 });
 // 로그인 끝
+
+// 로그아웃
+router.post('/logout', (req, res) => {
+  res.cookie('authorization','');
+ return res.status(200).json({message: '로그아웃 완료'})
+})
 module.exports = router;

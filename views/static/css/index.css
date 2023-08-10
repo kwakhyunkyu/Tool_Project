@@ -1,135 +1,25 @@
-/* common */
-body {
-  box-sizing: border-box;
-  padding-top: 120px;
-  font-family: 'Noto Sans KR', sans-serif;
+.board-from {
+  margin: 30px auto;
+  width: 500px;
+  padding: 40px;
+  border: 1px solid #3d3d3d;
 }
-li {
-  list-style: none;
-}
-a {
-  text-decoration: none;
-  display: block;
-}
-.wrap {
-  margin: 0 auto;
-  padding: 0 20px;
-  max-width: 1400px;
+.form-title {
+  margin-bottom: 20px;
 }
 
-.search {
-}
-.text-logo {
-  width: 300px;
-  display: block;
-  margin: 0 auto;
-}
-.search-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 40px 20px 80px;
-  width: 100%;
-}
-.search input {
-  padding-left: 12px;
-  width: 600px;
-  height: 40px;
-  border: 2px solid #ee2b26;
-  border-radius: 100px;
-  outline: none;
-}
-.search input:focus {
-  border: 2px solid #ef653c;
-}
-.search button {
-  width: 80px;
-  color: #fff;
-  background-color: #ee2b26;
-  border: 2px solid #ee2b26;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.search button:hover {
-  background-color: #ef653c;
-}
-
-.feed {
-  min-height: calc(100vh - 500px);
-}
-
-.feed .feed-container {
+.board {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
-  justify-content: space-around;
-}
-.feed .feed-container li {
-  position: relative;
-  width: 272px;
-  height: 272px;
-  border-radius: 32px;
-  transition: background-color 0.2s;
-  overflow: hidden;
-  background: no-repeat center / cover
-    url('https://cdn.mindgil.com/news/photo/202004/69068_2873_1455.jpg');
+  gap: 30px;
+  padding: 20px;
 }
 
-.feed .feed-container li:nth-child(2) {
-  background-image: url('https://image.yes24.com/momo/TopCate647/MidCate003/64628198.jpg');
+.board li {
+  padding: 20px;
+  width: 500px;
+  border: 1px solid #3d3d3d;
 }
-
-.feed .feed-container li:nth-child(3) {
-  background-image: url('https://mblogthumb-phinf.pstatic.net/MjAxNzAzMTFfMjE4/MDAxNDg5MjM2NjY2ODYx.ZHMqMlRGn6ofdOWZhmionO5d_xlMsQ-ZKyLu8SyJNvkg.cmqXzOEBsJHwJy7G_4X16Y3Rqm2HibZVRcQ8LVLK_zog.JPEG.gun8230/%EB%8C%80%EA%B5%AC%EA%B0%80%EB%A7%B9%EA%B1%B0%EB%9E%98%EC%82%AC_%EA%B5%AD%EB%82%B4_%ED%94%84%EB%9E%9C%EC%B0%A8%EC%9D%B4%EC%A6%88_%EB%B8%8C%EB%9E%9C%EB%93%9C.jpg?type=w800');
-}
-
-.feed .feed-container li:nth-child(4) {
-  background-image: url('https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202203/24/9fd43cd4-d420-4e62-996b-1ba7dbfaecce.jpg');
-}
-
-.feed .feed-container li:nth-child(5) {
-  background-image: url('https://www.theborn.co.kr/wp-content/uploads/2022/05/brand-1.png');
-}
-
-.feed .feed-container li:nth-child(6) {
-  background-image: url('https://cdn.huffingtonpost.kr/news/photo/202103/107657_202612.jpg');
-}
-
-.feed .feed-container li:nth-child(7) {
-  background-image: url('https://cooknchefnews.com/news/data/20211202/p1065616497473635_244_thum.jpg');
-}
-
-.feed .feed-container li:nth-child(8) {
-  background-image: url('https://newsimg.sedaily.com/2022/03/13/263EHMUU2T_3.jpg');
-}
-
-.feed .feed-container li a {
-  font-weight: bold;
-  font-size: 28px;
-  color: #333;
-  text-shadow: gray 2px 2px 1px;
-  transition: color 0.2s;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-@media (max-width: 1215px) {
-  .feed .feed-container li {
-    width: calc(50% - 40px);
-    height: auto;
-    aspect-ratio: 1;
-  }
-}
-@media (max-width: 768px) {
-  .feed .feed-container li {
-    width: calc(50% - 20px);
-  }
-  .feed .feed-container {
-    gap: 12px;
-  }
+.board li .board-title {
+  margin-bottom: 20px;
 }

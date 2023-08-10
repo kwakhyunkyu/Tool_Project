@@ -5,6 +5,28 @@ const { Op } = require('sequelize');
 const sequelize = require('sequelize');
 const router = express.Router();
 
+
+// 칼럼 내 카드 조회
+router.get('/:columnId/card', async (req, res) => {
+  try {
+    const columnId = req.params.columnId;
+    // order 값을 기준으로 오름차순
+    const cards = await Cards.findAll({
+      where: { columnId },
+      order: [['order', 'ASC']],
+    });
+    if (!cards.length) {
+      return res.status(401).json({ message: '해당 칼럼에 카드가 없습니다.' });
+    }
+
+
+    res.status(200).json({ datas: cards });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: '카드 조회 중 오류가 발생했습니다.' });
+  }
+});
+
 // 카드 생성
 router.post('/card', authMiddleware, async (req, res) => {
   try {
@@ -81,6 +103,23 @@ router.put('/card/:cardId', authMiddleware, async (req, res) => {
   }
 });
 
+// 카드 삭제
+router.delete('/card/:cardId', authMiddleware, async (req, res) => {
+  try {
+    const cardId = req.params.cardId;
+    const deletedRowCount = await Cards.destroy({ where: { cardId } });
+
+    if (deletedRowCount === 0) {
+      return res.status(404).json({ error: '해당 카드를 찾을 수 없습니다.' });
+    }
+
+    res.status(204).json();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: '카드 삭제 중 오류가 발생했습니다.' });
+  }
+});
+
 // 카드 위치 수정
 router.put('/card/move/:cardId', authMiddleware, async (req, res) => {
   try {
@@ -105,30 +144,25 @@ router.put('/card/move/:cardId', authMiddleware, async (req, res) => {
       );
     } else {
       // 같은 칼럼 내에서의 이동
-
       if (newOrder < card.order) {
-        // 같은 칼럼 내에서 낮은 order에서 높은 order로 변경될 때
-
-        // 기존에 낮은 order 값 이상이면서 높은 order 미만의 order 값을 가진 카드들의 order 값을 1씩 감소시킵니다.
+        // 낮은 order에서 높은 order로 변경될 때
         await Cards.update(
           { order: sequelize.literal(`\`order\` - 1`) },
           {
             where: {
               columnId,
-              order: { [Op.gte]: newOrder, [Op.lt]: card.order },
+              order: { [Op.gt]: newOrder, [Op.lte]: card.order },
             },
           },
         );
       } else if (newOrder > card.order) {
-        // 같은 칼럼 내에서 높은 order에서 낮은 order로 변경될 때
-
-        // 기존에 낮은 order 값 이상이면서 높은 order 미만의 order 값을 가진 카드들의 order 값을 1씩 증가시킵니다.
+        // 높은 order에서 낮은 order로 변경될 때
         await Cards.update(
           { order: sequelize.literal(`\`order\` + 1`) },
           {
             where: {
               columnId,
-              order: { [Op.gt]: card.order, [Op.lte]: newOrder },
+              order: { [Op.lt]: newOrder, [Op.gte]: card.order },
             },
           },
         );

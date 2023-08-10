@@ -1,0 +1,14 @@
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 20px;
+}
+
+.board li {
+  padding: 20px;
+  width: 500px;
+}
+.board li .board-desc {
+  margin: 20px 0;
+}

@@ -10,11 +10,11 @@ router.get('/:board_id/column', async (req, res) => {
   try {
     const { board_id } = req.params;
     // 순번이 빠른 순서대로 가져오기
-    const columns = await Columns.findAll(
-      { order: [['order', 'ASC']] }, // 얘가 맨 위에 와야 정렬이 제대로 된다.ㅡㅡ
-      { attributus: ['columnId, boardId', 'name', 'order'] },
-      { where: { boardId: board_id } },
-    );
+    const columns = await Columns.findAll({ 
+      where: { boardId: board_id }, 
+      attributes: ['columnId', 'boardId', 'name', 'order'], 
+      order: [['order', 'ASC']],
+    });
     return res.status(200).json({ datas: columns });
   } catch (error) {
     return res.status(400).json({ message: error });
@@ -26,7 +26,6 @@ router.post('/:board_id/column', authMiddleware, async (req, res) => {
   const user = res.locals.user;
   const { board_id } = req.params;
   const { name } = req.body;
-
   try {
     const maxOrder = await Columns.max('order', { where: { boardId: board_id } });
     // 유저보드에 있는 유저의 정보를 가져오기
@@ -60,7 +59,6 @@ router.put('/:board_id/column/:column_id', authMiddleware, async (req, res) => {
     const userBoard = await UserBoards.findOne({
       where: { userId: user.userId, boardId: board_id },
     });
-
     // 가져온 유저가 관리자인지 확인한다. (보드테이블이 없으므로 주석)
     if (userBoard.isAdmin === false)
       return res.status(403).json({ message: '수정권한이 없습니다.' });
@@ -72,7 +70,6 @@ router.put('/:board_id/column/:column_id', authMiddleware, async (req, res) => {
         where: { columnId: column_id, boardId: board_id },
       },
     );
-
     return res.status(200).json({ message: '컬럼 이름이 수정되었습니다.' });
   } catch (error) {
     return res.status(400).json({ message: error });
@@ -81,17 +78,21 @@ router.put('/:board_id/column/:column_id', authMiddleware, async (req, res) => {
 
 // 컬럼 순서변경
 router.put('/:board_id/column_order/:column_id', authMiddleware, async (req, res) => {
+  const regex= /^[0-9]/g
   const t = await sequelize.transaction({
     islationLeval: Transaction.ISOLATION_LEVELS.READ_COMMITTED, // 격리수준을 READ_COMMITTED로 설정
   });
   const { board_id, column_id } = req.params;
   const { order } = req.body;
+
   // 변경하고 싶은 순서
   try {
     // 해당 컬럼의 정보를 가져오기
     const columnInfo = await Columns.findOne({ where: { columnId: column_id, boardId: board_id } });
     if (!columnInfo) return res.status(412).json({ message: '해당 컬럼을 찾지 못했습니다.' });
-
+    if(regex.test(order) === false) {
+      return res.status(412).json({message: "숫자만 입력해 주세요"})
+    }
     // 현재의 순번보다 변경하려는 순번값이 높은지 낮은지 먼저 확인한다.
     if (columnInfo.order > order) {
       // 순번을 앞으로 할때
