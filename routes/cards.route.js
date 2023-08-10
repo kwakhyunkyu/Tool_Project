@@ -5,18 +5,22 @@ const { Op } = require('sequelize');
 const sequelize = require('sequelize');
 const router = express.Router();
 
+
 // 칼럼 내 카드 조회
 router.get('/:columnId/card', async (req, res) => {
   try {
     const columnId = req.params.columnId;
-
     // order 값을 기준으로 오름차순
     const cards = await Cards.findAll({
       where: { columnId },
       order: [['order', 'ASC']],
     });
+    if (!cards.length) {
+      return res.status(401).json({ message: '해당 칼럼에 카드가 없습니다.' });
+    }
 
-    res.status(200).json(cards);
+
+    res.status(200).json({ datas: cards });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: '카드 조회 중 오류가 발생했습니다.' });
