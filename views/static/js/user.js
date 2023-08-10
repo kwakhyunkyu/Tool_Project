@@ -4,6 +4,7 @@ const userConfirmPasswordEl = document.querySelector('.user-confirm-password');
 const userNameEl = document.querySelector('.user-name');
 const userBtnEl = document.querySelector('.user-btn');
 const userDeleteBtnEl = document.querySelector('.user-delete-btn');
+// 수정 1
 userBtnEl.addEventListener('click', async () => {
   if (userEmailEl.value === '' || userPasswordEl.value === '' || userNameEl.value === '')
     return alert('수정 정보를 입력해주세요');
