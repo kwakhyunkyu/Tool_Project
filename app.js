@@ -9,7 +9,7 @@ const commentsRouter = require('./routes/comments.route.js');
 const viewRouter = require('./views/router/index.js');
 const app = express();
 
-const PORT = 3000;
+const PORT = 3003;
 app.use(express.json());
 app.use(cookieParser());
 

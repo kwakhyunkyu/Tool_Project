@@ -130,8 +130,8 @@ const cardView = async () => {
 async function editName ($event) {
   const parentElement = event.target.parentElement
   const newName = parentElement.childNodes[3].value
-  
   const columnId = event.target.parentElement.parentElement.id
+  
   await fetch(`/api/${boardId}/column/${columnId}`, {
     method: 'PUT',
     headers: {
@@ -152,8 +152,8 @@ async function editName ($event) {
 async function editOrder($event) {
   const parentElement = event.target.parentElement
   const newOrder = parentElement.childNodes[7].value
-  console.log('newOrder = ', newOrder)
   const columnId = event.target.parentElement.parentElement.id
+  
   await fetch(`/api/${boardId}/column_order/${columnId}`, {
     method: 'PUT',
     headers: {
