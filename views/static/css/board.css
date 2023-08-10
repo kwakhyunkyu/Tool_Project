@@ -1,6 +1,7 @@
 * {
   margin: 0;
 }
+body{padding-top: 120px;}
 .column-list .column .card .add-column {
   box-sizing: border-box;
 }
