@@ -11,12 +11,19 @@ body{padding-top: 120px;}
   border: 1px solid black;
 }
 
+.column-title {
+  display: flex;
+  
+}
+
 .add-btn {
   border: 1px solid black;
   border-radius: 5px;
   padding: 5px;
   cursor: pointer;
 }
+
+
 
 .column-add-box {
   display: flex;
